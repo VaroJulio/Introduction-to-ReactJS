@@ -1,0 +1,19 @@
+#titleQuestion{
+    margin-top: 2em !important;
+    margin-bottom: 1em !important;
+}
+
+#questions{
+    padding-left: 20%;
+}
+
+#score{
+    margin-top: 27% !important;
+    margin-bottom: 1em !important;    
+}
+
+#restart{
+    display: flex;
+    margin-left: 49%;
+    margin-top: 0%;
+}

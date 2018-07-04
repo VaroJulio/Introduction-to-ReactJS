@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <script src="https://unpkg.com/react@15/dist/react.min.js"></script>
+    <script src="https://unpkg.com/react-dom@15/dist/react-dom.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.24.0/babel.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+
+</head>
+
+<body>
+    <div id="root" class="container"></div>
+    <script type="text/babel">
+        var title = "Welcome to React Transportation";
+        var description = "The best place to buy vehicles online";
+        var errorHeaderTitle = "Error: Title or Description not valid";
+
+        function HeaderTitle(props){
+            if (!isEmptyBlanckWOrOnlyWhiteSpace(props.title) && !isEmptyBlanckWOrOnlyWhiteSpace(props.description)){
+                return (
+                    <div id ="headerTitle">
+                        <h2>{props.title}</h2>
+                        <h3>{props.description}</h3>
+                        <DoubleSpace/>
+                    </div>
+                );            
+            } 
+            else{
+                return <h2>{errorHeaderTitle}</h2>;
+            }          
+        }
+
+        function Options(props){
+            let inputStyle = {display: "inline"};
+            return (
+                <div id="optionsAbailable">
+                    <h2>Choose Options</h2>
+                    <Space/>
+                    <h3 style={inputStyle}>New Only</h3>
+                    <input type="checkbox" style={inputStyle} defaultChecked/>
+                    <Space/>
+                    <h3 style={inputStyle}>Select Type</h3>
+                    <CarSelect/>
+                    <DoubleSpace/>
+                </div>
+            );
+        }
+
+        function CarSelect(props){
+            let carType = ["All", "Cars", "Trucks", "Convertibles"];
+            let selectStyle = {display: "inline", width: "15%"};
+            let carOptions = carType.map(function(item,index){
+                                return <option value={index}>{item}</option>;
+                             });
+            return(
+                <select style={selectStyle} className="custom-select"> {carOptions} </select>
+            );
+        }
+
+        var transports = {
+            Cars:{Name: "Cars", Data:[
+                {Year: "2013", Model: "A", Price: "$32000" },
+                {Year: "2011", Model: "B", Price: "$4400" },
+                {Year: "2016", Model: "B", Price: "$15500" }
+            ]},
+            Trucks:{Name: "Trucks", Data:[
+                {Year: "2014", Model: "D", Price: "$18000" },
+                {Year: "2013", Model: "E", Price: "$5200" }
+            ]},
+            Convertibles:{Name: "Convertibles", Data:[
+                {Year: "2014", Model: "D", Price: "$18000" },
+                {Year: "2013", Model: "E", Price: "$5200" }
+            ]}
+        }
+
+        function TableTransport(props){
+            let tableStyle = {border: "1px solid black"};
+            let fillTable = props.transports.map(function(item,index){
+                                console.log(item);
+                                var content = 
+                                <p>
+                                    <table style={tableStyle} className="table table-bordered">
+                                        <tr><th>Year</th><th>Model</th><th>Price</th><th>Buy</th></tr>
+                                        <tr><td>{item.Year}</td><td>{item.Model}</td><td>{item.Price}</td><td><input type="submit" value="Buy now" className="btn"/></td></tr>    
+                                    </table>
+                                    <br/>
+                                </p>
+                                console.log(content);
+                                return content;
+                            });  
+            return (
+                <div id={props.Name}>
+                    <h2>{props.Name}</h2>
+                    {fillTable}
+                </div>
+            );         
+        }
+
+        function DoubleSpace(){
+            return <span><br/><br/></span>;
+        }
+
+        function Space(){
+            return <br/>;
+        }
+
+        function App(props){
+            return(
+                <div id="app">
+                    <HeaderTitle title={title} description={description}/>
+                    <Options/>
+                    <TableTransport transports={transports.Cars.Data} Name={transports.Cars.Name}/>
+                    <DoubleSpace/>
+                    <TableTransport transports={transports.Trucks.Data} Name={transports.Trucks.Name}/>
+                    <DoubleSpace/>
+                    <TableTransport transports={transports.Convertibles.Data} Name={transports.Convertibles.Name}/>
+                </div>
+            );
+        }
+
+        ReactDOM.render(
+            <App/>,
+            document.getElementById("root")
+        );
+       
+        function isEmptyBlanckWOrOnlyWhiteSpace(prop){
+            return (!prop || 0 === prop.length || /^\s*$/.test(prop) || !prop.trim());
+        }
+    </script>
+</body>
+
+</html>

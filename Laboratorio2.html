@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <script src="https://unpkg.com/react@15/dist/react.min.js"></script>
+    <script src="https://unpkg.com/react-dom@15/dist/react-dom.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.24.0/babel.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+    <link rel="stylesheet"  href="style.css">
+</head>
+
+<body>
+    <div id="root" class="container"></div>
+    <script type="text/babel">
+        function Question(props){
+            return(
+                <div>
+                    <h1 id="titleQuestion">{(props.finish) ? "The trivia ended!" : props.data[props.index].question}</h1>
+                </div>
+            );
+        }
+
+        function Correct(props){
+            return(
+                <div>
+                    <h1 id="scoreCorrect">Correctas:{props.data}</h1>
+                </div>
+            ); 
+        }
+
+        function Incorrect(props){
+            return(
+                <div>
+                    <h1 id="scoreIncorrect">Incorrectas: {props.data}</h1>
+                </div>
+            );    
+        }
+
+        function AnswerButton(props){
+            return(
+                <button className="btn btn-outline-success" style={{display:"flex", height:80, width:300, marginBottom: "5%"}} onClick={()=>props.checkcAnswer(props.data.valor, props.index)}>{props.data.respuesta}</button>
+            );
+        }
+
+        function ArrayAnswers(props){
+            var answers = [];
+            for (var i=0; i<props.data[props.index].opciones.length; i++){
+                answers.push(<AnswerButton data={props.data[props.index].opciones[i]} index={props.index} checkcAnswer={props.checkcAnswer}/>);
+            }
+            return (
+                <div id="answers">
+                    {answers}
+                </div>
+            );
+        }
+
+        function Reset(props){
+            if (props.finish)
+            {
+                return(                       
+                    <button id="restart" style={{marginTop:"1%"}} className="btn btn-info" onClick={()=>props.restart()}>Restart</button>              
+                );
+            }else{
+                return null;
+            }
+        }
+
+        class Survey extends React.Component{
+            constructor(props){
+                super(props);
+                var dataQuestions =[
+                    {question:"Pregunta 1", opciones:[{respuesta:"A", valor:true}, {respuesta:"B", valor:false}, {respuesta:"C", valor:false}, {respuesta:"D", valor:false}]},
+                    {question:"Pregunta 2", opciones:[{respuesta:"A", valor:false}, {respuesta:"B", valor:true}, {respuesta:"C", valor:false}, {respuesta:"D", valor:false}]},
+                    {question:"Pregunta 3", opciones:[{respuesta:"A", valor:false}, {respuesta:"B", valor:false}, {respuesta:"C", valor:true}, {respuesta:"D", valor:false}]},
+                    {question:"Pregunta 4", opciones:[{respuesta:"A", valor:false}, {respuesta:"B", valor:false}, {respuesta:"C", valor:false}, {respuesta:"D", valor:true}]},
+                    {question:"Pregunta 5", opciones:[{respuesta:"A", valor:false}, {respuesta:"B", valor:false}, {respuesta:"C", valor:false}, {respuesta:"D", valor:true}]},
+                    {question:"Pregunta 6", opciones:[{respuesta:"A", valor:false}, {respuesta:"B", valor:false}, {respuesta:"C", valor:true}, {respuesta:"D", valor:false}]},
+                    {question:"Pregunta 7", opciones:[{respuesta:"A", valor:false}, {respuesta:"B", valor:true}, {respuesta:"C", valor:false}, {respuesta:"D", valor:false}]},
+                    {question:"Pregunta 8", opciones:[{respuesta:"A", valor:true}, {respuesta:"B", valor:false}, {respuesta:"C", valor:false}, {respuesta:"D", valor:false}]},
+                    {question:"Pregunta 9", opciones:[{respuesta:"A", valor:true}, {respuesta:"B", valor:false}, {respuesta:"C", valor:false}, {respuesta:"D", valor:false}]},
+                    {question:"Pregunta 10", opciones:[{respuesta:"A", valor:false}, {respuesta:"B", valor:true}, {respuesta:"C", valor:false}, {respuesta:"D", valor:false}]}                   
+                ];
+                this.checkcAnswer = this.checkcAnswer.bind(this);
+                this.restart = this.restart.bind(this);
+                this.state = {data: dataQuestions, correct: 0, incorrect: 0, qIndex:0, finish: false};
+                
+            }
+            checkcAnswer(data, index){
+                console.log("Click! " + data + " " + index);
+                if (data === true){
+                    if (index < 9){
+                        this.setState((prevState, props) => {
+                            return {qIndex: prevState.qIndex + 1, correct: prevState.correct + 1}
+                        })
+                    }else{
+                        this.setState((prevState, props) => {
+                            return {correct: (prevState.correct + prevState.incorrect) < 10 ? prevState.correct + 1 : prevState.correct, finish: true}
+                        })
+                    }
+                }else{
+                    if (index < 9){
+                        this.setState((prevState, props) => {
+                            return {qIndex: prevState.qIndex + 1, incorrect: prevState.incorrect + 1}
+                        })
+                    }else{
+                        this.setState((prevState, props) => {
+                            return {incorrect: (prevState.correct + prevState.incorrect) < 10 ? prevState.incorrect + 1 : prevState.incorrect, finish: true}
+                        })  
+                    }
+                }
+            }
+            restart(){
+                this.setState({data: this.state.data, correct: 0, incorrect: 0, qIndex:0, finish: false});  
+                console.log("Reset! " + this.state.finish);
+            }
+            render(){
+                return(
+                    <div id="App">
+                        <div className="row">
+                            <div className="col-md-6" id="questions">
+                                <Question data={this.state.data} index={this.state.qIndex} finish={this.state.finish}/>
+                                <ArrayAnswers data={this.state.data} index={this.state.qIndex} checkcAnswer={this.checkcAnswer}/>
+                            </div>
+                            <div className="col-md-6" id="score">
+                                <Incorrect data={this.state.incorrect}/>
+                                <Correct data={this.state.correct}/>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <Reset dataQuestions = {this.state.data}  finish = {this.state.finish} restart = {this.restart} />
+                        </div>
+                    </div>
+                );
+            }
+        }
+
+        ReactDOM.render(
+            <Survey/>, document.getElementById("root")
+        );
+    </script>
+</body>
+
+</html>

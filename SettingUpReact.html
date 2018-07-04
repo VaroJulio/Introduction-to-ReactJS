@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <script src="https://unpkg.com/react@15/dist/react.min.js"></script>
+    <script src="https://unpkg.com/react-dom@15/dist/react-dom.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.24.0/babel.js"></script>
+</head>
+
+<body>
+    <div id="root"></div>
+    <div id="conteo"></div>
+    <div id="elemento"></div>
+    <div id="producto"></div>
+    <div id="componente"></div>
+    <div id="propiedades"></div>
+    <div id="multiplesPropiedades"></div>
+    <div id="shopping"></div>
+    <div id="feature"></div>
+    
+    <script type="text/babel">
+        ReactDOM.render(
+            <div>Hello World</div>,
+            document.getElementById("root")
+        );
+
+        var num = 0;
+        function updateNum(){
+            ReactDOM.render(
+                <div>{num++}</div>, document.getElementById("conteo")
+            );
+        }
+
+        var elemento = (
+            <div>
+                <div>Hello World</div>
+                <div>Hello World</div>
+            </div>
+        );
+        function printElement(){
+            ReactDOM.render(
+                elemento, document.getElementById("elemento")
+            );
+        }
+
+        var product = {name:"apple",stock:0};
+        function printProduct(){
+            if(product.stock < 0){
+                var element = <h1>The product named {product.name} is not in stock</h1>;
+            }
+            else{
+                var element = <h1>The product named {product.name} and has {product.stock} units in stock</h1>;
+            } 
+            ReactDOM.render(
+                element, document.getElementById("producto")       
+            );   
+        }
+
+        var datoMostrar = <HelloWorld/>
+        function HelloWorld(){
+            return <h1>Me llamo Alvaro!</h1>;
+        }
+        function funcionImprimir(){
+            ReactDOM.render(
+                datoMostrar, document.getElementById("componente")
+            );
+        }
+
+
+        function ColombiaGano(props){
+            return <h1>Colombia: {props.message}</h1>;
+        }
+        ReactDOM.render(
+            <ColombiaGano message="Primera del grupo H del mundial 2018"/>,
+            document.getElementById("propiedades")
+        );
+
+        function EjemploPropiedadesArgumentos(props){
+            return <h1> Puntos Obtenidos: {props.arrayPuntos[props.index]}</h1>;
+        }
+        ReactDOM.render(
+            <EjemploPropiedadesArgumentos index="2" arrayPuntos={[0, 3, 6, 9]}/>, 
+            document.getElementById("multiplesPropiedades")
+        );
+
+        function ShoppingTitle(props){
+            return (
+                <div>
+                    <h1>{props.title}</h1>
+                    <h2>Total Number of Items: {props.numItems}</h2>
+                </div>
+            ) ;
+        }
+
+        function ListItem(props){
+            return <li>{props.item}</li>;
+        }
+
+        function ShoppingList(props){
+            return (
+                <div>
+                    <h3>{props.header}</h3>
+                    <ol>
+                        <ListItem item = {props.items[0]}/>
+                        <ListItem item = {props.items[1]}/>
+                        <ListItem item = {props.items[2]}/>
+                    </ol>
+                </div>
+            );
+        }
+
+        function ShoppingApp(props){
+            return (
+                <div>
+                    <ShoppingTitle title = "My Shopping List" numItems = "9"/>
+                    <ShoppingList header = "Food" items = {[ "Apple","Bread","Cheese"]}/>
+                    <ShoppingList header = "Clothes" items = {[ "Shirt","Pants","Hat"]}/>
+                    <ShoppingList header = "Supplies" items = {[ "Pen","Paper","Glue"]}/>
+                </div>
+            );
+        }
+
+        ReactDOM.render(
+            <ShoppingApp/>,
+            document.getElementById("shopping")
+        );
+
+        function Feature(props){
+            return (
+                props.active && <h1>{props.message}</h1>
+            );
+        }
+
+        ReactDOM.render(
+            <Feature active={true} message="Prueba de Renderizado condicional"/>, document.getElementById("feature")
+        );
+
+        setInterval(updateNum, 100);
+        printElement();
+        printProduct();
+        funcionImprimir();
+    </script>
+</body>
+
+</html>
